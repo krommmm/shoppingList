@@ -175,3 +175,15 @@ i {
 	width: 100px;
 }
 /* Fin de la section panier  */
+
+@media screen and (max-width: 600px){
+	.main {
+		flex-direction:column-reverse;
+	}
+	.articles{
+		width: 100%;
+	}
+	.panier{
+		width: 100%;
+	}
+}
