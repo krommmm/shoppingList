@@ -42,7 +42,6 @@ const createArticle = (shoes, selecteur) => {
 };
 //Calculate TOTAL
 const calculateTotal = () => {
-	console.log(tabPanier);
 	let cumul = 0;
 	for (let i = 0; i < tabPanier.length; i++) {
 		let quantity =
@@ -56,7 +55,6 @@ const calculateTotal = () => {
 			quantity = tabPanier[i].quantity;
 		}
 		cumul += parseFloat(tabPanier[i].prix * quantity);
-		console.log(cumul);
 	}
 	total = cumul;
 	let totalPrix = document.querySelector('.total .prix');
@@ -64,7 +62,6 @@ const calculateTotal = () => {
 
 	panierContainer.innerHTML = '';
 	createArticlePanier(tabPanier);
-	console.log(tabPanier);
 };
 
 const createArticlePanier = (tabPanier) => {
@@ -104,23 +101,21 @@ const createArticlePanier = (tabPanier) => {
 	var allQuantity = document.querySelectorAll('.quantity');
 	allQuantity.forEach((quantity) => {
 		quantity.addEventListener('change', () => {
-			console.log(quantity.value);
 			let titre = quantity.parentElement.children[0].textContent;
 			for (let i = 0; i < tabPanier.length; i++) {
 				if (tabPanier[i].titre === titre) {
 					tabPanier[i].quantity = parseFloat(quantity.value);
 				}
 			}
-
 			calculateTotal();
 		});
 	});
 };
 
 const AfficherPaiement = () => {
-	let paiement = document.querySelector(".paiement");
-	paiement.style.display = tabPanier.length>0 ? "flex" : "none";
-	};
+	let paiement = document.querySelector('.paiement');
+	paiement.style.display = tabPanier.length > 0 ? 'flex' : 'none';
+};
 
 const getShoes = (shoes) => {
 	let articles = document.querySelector('.articles');
@@ -144,17 +139,21 @@ allPanier.forEach((panier) => {
 				articleTrue = article;
 			}
 		}
-		console.log(articleTrue.prix);
-		tabPanier.push(articleTrue);
-		createArticlePanier(tabPanier);
-		calculateTotal();
-		AfficherPaiement();
+		//Si la chaussure existe déjà on l'incrémente
+		if (tabPanier.includes(articleTrue)) {
+			alert("vous avez déjà ajouté cet article au panier, veuillez modifier sa quantité dans le panier");
+		} else {
+			//sinon on l'ajoute
+			tabPanier.push(articleTrue);
+			createArticlePanier(tabPanier);
+			calculateTotal();
+			AfficherPaiement();
+		}
 	});
 });
 
 //Afficher cmd prise en compte
-let paiement = document.querySelector(".paiement");
- 	paiement.addEventListener("click",()=>{
-	alert("Votre commande a bien été prise en compte");
+let paiement = document.querySelector('.paiement');
+paiement.addEventListener('click', () => {
+	alert('Votre commande a bien été prise en compte');
 });
-
