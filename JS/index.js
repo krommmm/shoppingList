@@ -1,8 +1,7 @@
-var tabPanier = [];
-var total = 0;
-var panierContainer = document.querySelector('.panier_container');
+var cumul = 0;
 
-const createArticle = (shoes, selecteur) => {
+// CREATION des articles avec le DOM
+const creationVitrine = (shoes, selecteur) => {
 	let container = document.createElement('div');
 	let imgContainer = document.createElement('div');
 	let image = document.createElement('img');
@@ -40,120 +39,151 @@ const createArticle = (shoes, selecteur) => {
 	container.appendChild(logoPanier);
 	selecteur.appendChild(container);
 };
-//Calculate TOTAL
-const calculateTotal = () => {
-	let cumul = 0;
-	for (let i = 0; i < tabPanier.length; i++) {
-		let quantity =
-			tabPanier[i].quantity !== undefined ? tabPanier[i].quantity : 1;
-		if (
-			tabPanier[i].quantity === undefined ||
-			tabPanier[i].quantity === null
-		) {
-			quantity = 1;
-		} else {
-			quantity = tabPanier[i].quantity;
-		}
-		cumul += parseFloat(tabPanier[i].prix * quantity);
+const afficherPanier = () => {
+	// si le panier est vide, on affiche panier vide et 0€
+	if (panier.length === 0) {
+		document.querySelector('.panier_container').innerHTML = 'Panier vide';
+		let total = document.querySelector('.total .prix');
+		total.textContent = '0.00'; 
+		return;
+	
 	}
-	total = cumul;
-	let totalPrix = document.querySelector('.total .prix');
-	totalPrix.textContent = total.toFixed(2);
-
-	panierContainer.innerHTML = '';
-	createArticlePanier(tabPanier);
-};
-
-const createArticlePanier = (tabPanier) => {
-	panierContainer.innerHTML = '';
-	for (let article of tabPanier) {
-		let quantity = article.quantity !== undefined ? article.quantity : 1;
+	document.querySelector('.panier_container').innerHTML = '';
+	for (let article of panier) {
 		let text = `<div class="mainContainer">
-		<div class="imgContainer"><img src="${article.image}"/></div>
-		<div class="textContainer"><p class="titre">${article.titre}</p><p class="prix">${article.prix} €</p><input type="number" min="1" max="100" value="${quantity}" class="quantity"/></div>
-		<div class="deleteContainer"><i class="fa-solid fa-trash"></i></div>
-		</div>`;
+<div class="imgContainer"><img src="${article.image}"/></div>
+<div class="textContainer"><p class="titre">${article.nom}</p><p class="prix">${article.prix} €</p><input type="number" min="1" max="100" value="${article.quantité}" class="quantity"/></div>
+<div class="deleteContainer"><i class="fa-solid fa-trash"></i></div>
+</div>`;
 		let panier = document.querySelector('.panier_container');
-
 		panier.insertAdjacentHTML('beforeend', text);
 	}
 
-	// Suppression
-	var allPoubelle = document.querySelectorAll('.fa-trash');
-	allPoubelle.forEach((poubelle) => {
+	let total = document.querySelector('.total .prix');
+	total.textContent = cumul.toFixed(2);
+
+	// #### MODIFIER QUANTITE
+	var quantités = document.querySelectorAll('.quantity');
+	quantités.forEach((quantité) => {
+		quantité.addEventListener('change', () => {
+			let nomArticleQuantité =
+				quantité.parentElement.firstElementChild.textContent;
+			for (let article of panier) {
+				if (article.nom === nomArticleQuantité) {
+					if (quantité.value >= 1 && quantité.value <= 100) {
+						article.quantité = quantité.value;
+						localStorage.setItem('panier', JSON.stringify(panier));
+					} else {
+						alert("choisir un nombre d'articles entre 1 et 100");
+						quantité.value = article.quantité;
+					}
+					// #### Calculer le total :
+					cumul = 0;
+					for (let article of panier) {
+						cumul += article.prix * article.quantité;
+					}
+					console.log(cumul);
+					afficherPanier();
+				}
+			}
+		});
+	});
+	localStorage.setItem('panier', JSON.stringify(panier));
+
+	// #### SUPPRIMER UN ARTICLE
+	var poubelles = document.querySelectorAll('.fa-trash');
+	poubelles.forEach((poubelle) => {
 		poubelle.addEventListener('click', () => {
-			let titre =
-				poubelle.parentElement.parentElement.children[1].children[0]
-					.textContent;
-			for (let i = 0; i < tabPanier.length; i++) {
-				if (tabPanier[i].titre === titre) {
-					tabPanier.splice(i, 1);
+			let ancetrePoubelle = poubelle.closest('.mainContainer');
+			let nomArticlePoubelle =
+				ancetrePoubelle.children[1].firstElementChild.textContent;
+			for (let i = 0; i < panier.length; i++) {
+				if (panier[i].nom === nomArticlePoubelle) {
+					panier.splice(i, 1);
+					localStorage.setItem('panier', JSON.stringify(panier));
+					afficherPanier();
+					var panierDiv = document.querySelector('.panier');
+					cumul = 0;
+					console.log(panier);
+					for (let article of panier) {
+						if(panier!==null){
+						cumul += article.prix * article.quantité;
+						}else{
+							cumul=0;
+						}
+						
+						afficherPanier();
+					}
 				}
 			}
-			panierContainer.innerHTML = '';
-			createArticlePanier(tabPanier);
-			calculateTotal();
-			AfficherPaiement();
-		});
-	});
-
-	//Quantité
-	var allQuantity = document.querySelectorAll('.quantity');
-	allQuantity.forEach((quantity) => {
-		quantity.addEventListener('change', () => {
-			let titre = quantity.parentElement.children[0].textContent;
-			for (let i = 0; i < tabPanier.length; i++) {
-				if (tabPanier[i].titre === titre) {
-					tabPanier[i].quantity = parseFloat(quantity.value);
-				}
-			}
-			calculateTotal();
 		});
 	});
 };
 
-const AfficherPaiement = () => {
-	let paiement = document.querySelector('.paiement');
-	paiement.style.display = tabPanier.length > 0 ? 'flex' : 'none';
-};
+// #### AFFICHAGE DES CHAUSSURES EN VITRINE :
+var articles = document.querySelector('.articles');
+for (let chaussure of chaussures) {
+	creationVitrine(chaussure, articles);
+}
 
-const getShoes = (shoes) => {
-	let articles = document.querySelector('.articles');
-	for (let i = 0; i < shoes.length; i++) {
-		createArticle(shoes[i], articles);
-	}
-};
+// #### RECUPERATION DU PANIER DANS LE STORAGE :
+var panier = [];
+if (localStorage.getItem('panier')) {
+	panier = JSON.parse(localStorage.getItem('panier'));
+	console.log(panier);
+}
 
-getShoes(shoes);
+// #### Calculer le total :
+var panierDiv = document.querySelector('.panier');
+cumul = 0;
+for (let article of panier) {
+	cumul += article.prix * article.quantité;
+}
+console.log(cumul);
+afficherPanier();
 
-//Ajouter
-var allPanier = document.querySelectorAll('.imgPanier');
-allPanier.forEach((panier) => {
-	panier.addEventListener('click', () => {
-		let articleContainer = panier.parentElement.parentElement;
-		let titreArticle = articleContainer.children[1].children[0].textContent;
-
-		var articleTrue;
-		for (let article of shoes) {
-			if (article.titre === titreArticle) {
-				articleTrue = article;
+// #### AJOUTER :
+var caddies = document.querySelectorAll('.imgPanier');
+caddies.forEach((caddie) => {
+	caddie.addEventListener('click', () => {
+		//creation d'un objet avec les propriétés de l'article
+		const articleSelectionné = {};
+		let caddie_ancestor = caddie.closest('.article_container');
+		articleSelectionné.nom =
+			caddie_ancestor.children[1].firstElementChild.textContent;
+		for (let chaussure of chaussures) {
+			if (chaussure.titre === articleSelectionné.nom) {
+				articleSelectionné.image = chaussure.image;
+				articleSelectionné.prix = chaussure.prix;
+				articleSelectionné.quantité = chaussure.quantity;
 			}
 		}
-		//Si la chaussure existe déjà on l'incrémente
-		if (tabPanier.includes(articleTrue)) {
-			alert("vous avez déjà ajouté cet article au panier, veuillez modifier sa quantité dans le panier");
+		const déjàDansLePanier = panier.some(
+			(item) => item.nom === articleSelectionné.nom
+		);
+		if (déjàDansLePanier) {
+			for (let panierSelection of panier) {
+				if (panierSelection.nom === articleSelectionné.nom) {
+					panierSelection.quantité++;
+				}
+			}
 		} else {
-			//sinon on l'ajoute
-			tabPanier.push(articleTrue);
-			createArticlePanier(tabPanier);
-			calculateTotal();
-			AfficherPaiement();
+			//ajout au tableau du panier
+			panier.push(articleSelectionné);
 		}
+		//transfert du tableau du panier ds le storage
+		localStorage.setItem('panier', JSON.stringify(panier));
+		afficherPanier();
+		// #### Calculer le total :
+		var panierDiv = document.querySelector('.panier');
+		cumul = 0;
+		for (let article of panier) {
+			cumul += article.prix * article.quantité;
+		}
+		console.log(cumul);
+		afficherPanier();
 	});
 });
 
-//Afficher cmd prise en compte
-let paiement = document.querySelector('.paiement');
-paiement.addEventListener('click', () => {
-	alert('Votre commande a bien été prise en compte');
-});
+console.log(articles);
+afficherPanier();
