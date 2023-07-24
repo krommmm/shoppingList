@@ -227,3 +227,9 @@ i {
 		width: 100%;
 	}
 }
+
+@media screen and (max-width: 972px){
+	.paiement_container{
+		margin-top: 50px;
+	}
+}

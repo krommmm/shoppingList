@@ -88,6 +88,8 @@ const afficherPanier = () => {
 	});
 	localStorage.setItem('panier', JSON.stringify(panier));
 
+
+
 	// #### SUPPRIMER UN ARTICLE
 	var poubelles = document.querySelectorAll('.fa-trash');
 	poubelles.forEach((poubelle) => {
@@ -102,11 +104,14 @@ const afficherPanier = () => {
 					afficherPanier();
 					var panierDiv = document.querySelector('.panier');
 					cumul = 0;
+					let paiement = document.querySelector('.paiement');
+					paiement.style.display = panier.length > 0 ? 'flex' : 'none';
 					let iconeCadeau = document.querySelector('.fa-gift');
 					if (panier.length===0) {
 						iconeCadeau.style.visibility = 'hidden';
 					} else {
 						iconeCadeau.style.visibility = 'visible';
+						
 					}
 					for (let article of panier) {
 						if (panier !== null) {
@@ -114,13 +119,14 @@ const afficherPanier = () => {
 						} else {
 							cumul = 0;
 						}
-					
 						afficherPanier();
 					}
 				}
 			}
 		});
 	});
+	let paiement = document.querySelector('.paiement');
+	paiement.style.display = panier.length > 0 ? 'flex' : 'none';
 };
 
 // #### AFFICHAGE DES CHAUSSURES EN VITRINE :
@@ -197,6 +203,8 @@ caddies.forEach((caddie) => {
 		} else {
 			iconeCadeau.style.visibility = 'hidden';
 		}
+		let paiement = document.querySelector('.paiement');
+		paiement.style.display = panier.length > 0 ? 'flex' : 'none';
 	});
 });
 
@@ -217,4 +225,11 @@ panierReduit.addEventListener('click', () => {
 		articlesContainer.style.display = 'flex';
 		panierContainer.style.display = 'none';
 	}
+});
+
+
+// #### Afficher cmd prise en compte
+let paiement = document.querySelector('.paiement');
+paiement.addEventListener('click', () => {
+	alert('Votre commande a bien été prise en compte');
 });
