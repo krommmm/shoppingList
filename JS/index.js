@@ -44,9 +44,8 @@ const afficherPanier = () => {
 	if (panier.length === 0) {
 		document.querySelector('.panier_container').innerHTML = 'Panier vide';
 		let total = document.querySelector('.total .prix');
-		total.textContent = '0.00'; 
+		total.textContent = '0.00';
 		return;
-	
 	}
 	document.querySelector('.panier_container').innerHTML = '';
 	for (let article of panier) {
@@ -82,7 +81,6 @@ const afficherPanier = () => {
 					for (let article of panier) {
 						cumul += article.prix * article.quantité;
 					}
-					console.log(cumul);
 					afficherPanier();
 				}
 			}
@@ -104,14 +102,19 @@ const afficherPanier = () => {
 					afficherPanier();
 					var panierDiv = document.querySelector('.panier');
 					cumul = 0;
-					console.log(panier);
+					let iconeCadeau = document.querySelector('.fa-gift');
+					if (panier.length===0) {
+						iconeCadeau.style.visibility = 'hidden';
+					} else {
+						iconeCadeau.style.visibility = 'visible';
+					}
 					for (let article of panier) {
-						if(panier!==null){
-						cumul += article.prix * article.quantité;
-						}else{
-							cumul=0;
+						if (panier !== null) {
+							cumul += article.prix * article.quantité;
+						} else {
+							cumul = 0;
 						}
-						
+					
 						afficherPanier();
 					}
 				}
@@ -128,9 +131,16 @@ for (let chaussure of chaussures) {
 
 // #### RECUPERATION DU PANIER DANS LE STORAGE :
 var panier = [];
+
 if (localStorage.getItem('panier')) {
 	panier = JSON.parse(localStorage.getItem('panier'));
-	console.log(panier);
+}
+
+let iconeCadeau = document.querySelector('.fa-gift');
+if (panier.length === 0) {
+	iconeCadeau.style.visibility = 'hidden';
+} else {
+	iconeCadeau.style.visibility = 'visible';
 }
 
 // #### Calculer le total :
@@ -139,7 +149,6 @@ cumul = 0;
 for (let article of panier) {
 	cumul += article.prix * article.quantité;
 }
-console.log(cumul);
 afficherPanier();
 
 // #### AJOUTER :
@@ -173,6 +182,7 @@ caddies.forEach((caddie) => {
 		}
 		//transfert du tableau du panier ds le storage
 		localStorage.setItem('panier', JSON.stringify(panier));
+		alert('Vous avez ajouté un article.');
 		afficherPanier();
 		// #### Calculer le total :
 		var panierDiv = document.querySelector('.panier');
@@ -180,10 +190,31 @@ caddies.forEach((caddie) => {
 		for (let article of panier) {
 			cumul += article.prix * article.quantité;
 		}
-		console.log(cumul);
 		afficherPanier();
+		let iconeCadeau = document.querySelector('.fa-gift');
+		if (localStorage.getItem('panier')) {
+			iconeCadeau.style.visibility = 'visible';
+		} else {
+			iconeCadeau.style.visibility = 'hidden';
+		}
 	});
 });
 
-console.log(articles);
 afficherPanier();
+
+// #### CHANGEMENT AFFICHAGE ARTICLES OU PANIER
+let panierReduit = document.getElementById('panierReduit');
+let articlesContainer = document.querySelector('.articles');
+let panierContainer = document.querySelector('.panier');
+var toggle = false;
+panierReduit.addEventListener('click', () => {
+	toggle = !toggle;
+
+	if (toggle) {
+		articlesContainer.style.display = 'none';
+		panierContainer.style.display = 'flex';
+	} else {
+		articlesContainer.style.display = 'flex';
+		panierContainer.style.display = 'none';
+	}
+});
