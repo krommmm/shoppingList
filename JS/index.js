@@ -106,13 +106,8 @@ const afficherPanier = () => {
 					cumul = 0;
 					let paiement = document.querySelector('.paiement');
 					paiement.style.display = panier.length > 0 ? 'flex' : 'none';
-					let iconeCadeau = document.querySelector('.fa-gift');
-					if (panier.length===0) {
-						iconeCadeau.style.visibility = 'hidden';
-					} else {
-						iconeCadeau.style.visibility = 'visible';
-						
-					}
+					let iconeCadeau = document.querySelector('.panierPetit');
+					iconeCadeau.textContent = panier.length;
 					for (let article of panier) {
 						if (panier !== null) {
 							cumul += article.prix * article.quantité;
@@ -142,12 +137,8 @@ if (localStorage.getItem('panier')) {
 	panier = JSON.parse(localStorage.getItem('panier'));
 }
 
-let iconeCadeau = document.querySelector('.fa-gift');
-if (panier.length === 0) {
-	iconeCadeau.style.visibility = 'hidden';
-} else {
-	iconeCadeau.style.visibility = 'visible';
-}
+let iconeCadeau = document.querySelector('.panierPetit');
+iconeCadeau.textContent = panier.length;
 
 // #### Calculer le total :
 var panierDiv = document.querySelector('.panier');
@@ -197,12 +188,8 @@ caddies.forEach((caddie) => {
 			cumul += article.prix * article.quantité;
 		}
 		afficherPanier();
-		let iconeCadeau = document.querySelector('.fa-gift');
-		if (localStorage.getItem('panier')) {
-			iconeCadeau.style.visibility = 'visible';
-		} else {
-			iconeCadeau.style.visibility = 'hidden';
-		}
+		let iconeCadeau = document.querySelector('.panierPetit');
+		iconeCadeau.textContent = panier.length;
 		let paiement = document.querySelector('.paiement');
 		paiement.style.display = panier.length > 0 ? 'flex' : 'none';
 	});
