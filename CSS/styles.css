@@ -217,6 +217,7 @@ i {
 }
 /* Fin de la section panier  */
 
+/* Début du viewport */
 @media screen and (max-width: 600px) {
 	.panierReduit_container {
 		position: absolute;
@@ -240,3 +241,4 @@ i {
 		margin-top: 50px;
 	}
 }
+/* Fin du viewport */
