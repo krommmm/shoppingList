@@ -1,10 +1,10 @@
-//	VARIABLES
+//	VARIABLES GLOBALES
 var cumul = 0;
 var panierContainer = document.querySelector('.panier_container');
 let panierV = document.querySelector('.panier');
 var panier = [];
 
-//	FONCTIONS
+//	FONCTIONS REUTILISABLES
 const prixTotal = () => {
 	let cumulation = 0;
 	for (let article of panier) {
@@ -12,6 +12,8 @@ const prixTotal = () => {
 	}
 	return cumulation;
 };
+
+//	CODE
 
 const mettreAJourStorage = () => {
 	localStorage.setItem('panier', JSON.stringify(panier));
