@@ -12,15 +12,21 @@ const prixTotal = () => {
 	}
 	return cumulation;
 };
-
-//	CODE
-
+//	FONCTIONS
 const mettreAJourStorage = () => {
 	localStorage.setItem('panier', JSON.stringify(panier));
 };
 
 const indiqueNombreArticleDansPanier = () => {
 	let iconeCadeau = document.querySelector('.panierPetit');
+	let sauvegardeLongeurPanier = iconeCadeau.textContent;
+	setTimeout(() => {
+		if (sauvegardeLongeurPanier < panier.length) {
+			alert('Vous avez ajouté un article.');
+		} else {
+		}
+	}, 50);
+
 	iconeCadeau.textContent = panier.length;
 };
 
@@ -80,7 +86,6 @@ const supprimerArticle = () => {
 	});
 };
 
-//	FONCTION POUR CREER PANIER - MODIFIER QUANTITEE - SUPPRIMER ARTICLES
 const afficherPanier = () => {
 	// si le panier est vide, on affiche panier vide et 0€
 	if (panier.length === 0) {
@@ -111,85 +116,95 @@ const afficherPanier = () => {
 	paiement.style.display = panier.length > 0 ? 'flex' : 'none';
 };
 
-//	AFFICHER CHAUSSURES EN VITRINE
-var articles = document.querySelector('.articles');
-for (let chaussure of chaussures) {
-	creationVitrine(chaussure, articles);
+function afficherVitrine() {
+	var articles = document.querySelector('.articles');
+	for (let chaussure of chaussures) {
+		creationVitrine(chaussure, articles);
+	}
 }
 
-//	RECUPERATION DU PANIER DANS LE STORAGE
-if (localStorage.getItem('panier')) {
-	panier = JSON.parse(localStorage.getItem('panier'));
+function recuperationPanierDansStorage() {
+	if (localStorage.getItem('panier')) {
+		panier = JSON.parse(localStorage.getItem('panier'));
+	}
 }
 
-//indique le nombre d'articles dans le panier
-indiqueNombreArticleDansPanier();
-
-//CALCULER LE TOTAL DU PANIER
-cumul = prixTotal();
-afficherPanier();
-
-//	AJOUTER UN ARTICLE DANS LE PANIER
-var caddies = document.querySelectorAll('.imgPanier');
-caddies.forEach((caddie) => {
-	caddie.addEventListener('click', () => {
-		//creation d'un objet avec les propriétés de l'article
-		const articleSelectionné = {};
-		let caddie_ancestor = caddie.closest('.article_container');
-		articleSelectionné.nom =
-			caddie_ancestor.children[1].firstElementChild.textContent;
-		for (let chaussure of chaussures) {
-			if (chaussure.titre === articleSelectionné.nom) {
-				articleSelectionné.image = chaussure.image;
-				articleSelectionné.prix = chaussure.prix;
-				articleSelectionné.quantité = chaussure.quantity;
-			}
-		}
-		const déjàDansLePanier = panier.some(
-			(item) => item.nom === articleSelectionné.nom
-		);
-		if (déjàDansLePanier) {
-			for (let panierSelection of panier) {
-				if (panierSelection.nom === articleSelectionné.nom) {
-					panierSelection.quantité++;
+function ajouterArticleDansPanier() {
+	var caddies = document.querySelectorAll('.imgPanier');
+	caddies.forEach((caddie) => {
+		caddie.addEventListener('click', () => {
+			//creation d'un objet avec les propriétés de l'article
+			const articleSelectionné = {};
+			let caddie_ancestor = caddie.closest('.article_container');
+			articleSelectionné.nom =
+				caddie_ancestor.children[1].firstElementChild.textContent;
+			for (let chaussure of chaussures) {
+				if (chaussure.titre === articleSelectionné.nom) {
+					articleSelectionné.image = chaussure.image;
+					articleSelectionné.prix = chaussure.prix;
+					articleSelectionné.quantité = chaussure.quantity;
 				}
 			}
-		} else {
-			//ajout au tableau du panier
-			panier.push(articleSelectionné);
-		}
+			const déjàDansLePanier = panier.some(
+				(item) => item.nom === articleSelectionné.nom
+			);
+			if (déjàDansLePanier) {
+				for (let panierSelection of panier) {
+					if (panierSelection.nom === articleSelectionné.nom) {
+						panierSelection.quantité++;
+					}
+				}
+			} else {
+				//ajout au tableau du panier
+				panier.push(articleSelectionné);
+			}
 
-		mettreAJourStorage();
-		alert('Vous avez ajouté un article.');
-		afficherPanier();
+			mettreAJourStorage();
 
-		indiqueNombreArticleDansPanier();
-		let paiement = document.querySelector('.paiement');
-		paiement.style.display = panier.length > 0 ? 'flex' : 'none';
+			afficherPanier();
+
+			indiqueNombreArticleDansPanier();
+
+			let paiement = document.querySelector('.paiement');
+			paiement.style.display = panier.length > 0 ? 'flex' : 'none';
+		});
 	});
-});
+}
 
+function changementMenu() {
+	var toggle = false;
+	panierReduit.addEventListener('click', () => {
+		toggle = !toggle;
+
+		if (toggle) {
+			articlesContainer.style.display = 'none';
+			panierV.style.display = 'flex';
+		} else {
+			articlesContainer.style.display = 'flex';
+			panierV.style.display = 'none';
+		}
+	});
+}
+
+function afficherLePaiement() {
+	let paiement = document.querySelector('.paiement');
+	paiement.addEventListener('click', () => {
+		alert('Votre commande a bien été prise en compte');
+	});
+}
+
+//	CODE
+afficherVitrine();
+recuperationPanierDansStorage();
+indiqueNombreArticleDansPanier();
+cumul = prixTotal();
 afficherPanier();
+ajouterArticleDansPanier();
 
 // AFFICHAGE ARTICLES OU PANIER
 let panierReduit = document.getElementById('panierReduit');
 let articlesContainer = document.querySelector('.articles');
 
-var toggle = false;
-panierReduit.addEventListener('click', () => {
-	toggle = !toggle;
+changementMenu();
+afficherLePaiement();
 
-	if (toggle) {
-		articlesContainer.style.display = 'none';
-		panierV.style.display = 'flex';
-	} else {
-		articlesContainer.style.display = 'flex';
-		panierV.style.display = 'none';
-	}
-});
-
-// AFFICHER LE PAIEMENT
-let paiement = document.querySelector('.paiement');
-paiement.addEventListener('click', () => {
-	alert('Votre commande a bien été prise en compte');
-});
