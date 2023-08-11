@@ -1,0 +1,1 @@
+Utilisation de modules ES6 donc lecture avec Go Live de vsc ou autres lecteurs
