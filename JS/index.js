@@ -1,33 +1,17 @@
+import {chaussures} from "./shoes.js";
+import { creationVitrine } from "./creationVitrine.js";
+import {prixTotal} from "../js/prixTotal.js";
+import {indiqueNombreArticleDansPanier} from "../js/nbArticles.js";
+
 //	VARIABLES GLOBALES
 var cumul = 0;
 var panierContainer = document.querySelector('.panier_container');
 let panierV = document.querySelector('.panier');
 var panier = [];
 
-//	FONCTIONS REUTILISABLES
-const prixTotal = () => {
-	let cumulation = 0;
-	for (let article of panier) {
-		cumulation += article.prix * article.quantité;
-	}
-	return cumulation;
-};
 //	FONCTIONS
 const mettreAJourStorage = () => {
 	localStorage.setItem('panier', JSON.stringify(panier));
-};
-
-const indiqueNombreArticleDansPanier = () => {
-	let iconeCadeau = document.querySelector('.panierPetit');
-	let sauvegardeLongeurPanier = iconeCadeau.textContent;
-	setTimeout(() => {
-		if (sauvegardeLongeurPanier < panier.length) {
-			alert('Vous avez ajouté un article.');
-		} else {
-		}
-	}, 50);
-
-	iconeCadeau.textContent = panier.length;
 };
 
 const modifierQuantitee = () => {
@@ -45,7 +29,7 @@ const modifierQuantitee = () => {
 						alert("choisir un nombre d'articles entre 1 et 100");
 						quantité.value = article.quantité;
 					}
-					cumul = prixTotal();
+					cumul = prixTotal(panier);
 					afficherPanier();
 				}
 			}
@@ -71,7 +55,7 @@ const supprimerArticle = () => {
 					let paiement = document.querySelector('.paiement');
 					paiement.style.display =
 						panier.length > 0 ? 'flex' : 'none';
-					indiqueNombreArticleDansPanier();
+					indiqueNombreArticleDansPanier(panier);
 					for (let article of panier) {
 						if (panier !== null) {
 							cumul += article.prix * article.quantité;
@@ -104,7 +88,7 @@ const afficherPanier = () => {
 		panierContainer.insertAdjacentHTML('beforeend', text);
 	}
 	let total = document.querySelector('.total .prix');
-	cumul = prixTotal();
+	cumul = prixTotal(panier);
 	total.textContent = cumul.toFixed(2);
 
 	modifierQuantitee();
@@ -116,7 +100,7 @@ const afficherPanier = () => {
 	paiement.style.display = panier.length > 0 ? 'flex' : 'none';
 };
 
-function afficherVitrine() {
+function afficherVitrine(chaussures) {
 	var articles = document.querySelector('.articles');
 	for (let chaussure of chaussures) {
 		creationVitrine(chaussure, articles);
@@ -163,7 +147,7 @@ function ajouterArticleDansPanier() {
 
 			afficherPanier();
 
-			indiqueNombreArticleDansPanier();
+			indiqueNombreArticleDansPanier(panier);
 
 			let paiement = document.querySelector('.paiement');
 			paiement.style.display = panier.length > 0 ? 'flex' : 'none';
@@ -194,10 +178,10 @@ function afficherLePaiement() {
 }
 
 //	CODE
-afficherVitrine();
+afficherVitrine(chaussures);
 recuperationPanierDansStorage();
-indiqueNombreArticleDansPanier();
-cumul = prixTotal();
+indiqueNombreArticleDansPanier(panier);
+cumul = prixTotal(panier);
 afficherPanier();
 ajouterArticleDansPanier();
 
@@ -207,4 +191,6 @@ let articlesContainer = document.querySelector('.articles');
 
 changementMenu();
 afficherLePaiement();
+
+export {afficherLePaiement,changementMenu,}
 

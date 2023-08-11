@@ -35,3 +35,5 @@ const creationVitrine = (shoes, selecteur) => {
 	container.appendChild(logoPanier);
 	selecteur.appendChild(container);
 };
+
+export {creationVitrine};

@@ -9,4 +9,4 @@ const chaussures = [
     {image:"./assets/8.png",titre:"soulier cuir noir vernis",prix:99.28,quantity:1},
 ];
 
-
+export { chaussures };
