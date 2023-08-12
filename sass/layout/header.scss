@@ -1,0 +1,26 @@
+/*Debut de la barre de navigation */
+nav {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	height: 60px;
+	background-color: black;
+	color: white;
+
+	.left {
+		img {
+			width: 50px;
+			position: absolute;
+			left: 0;
+			top: 5px;
+			margin-left: 15px;
+		}
+	}
+	.center {
+		display: flex;
+	}
+}
+
+/*Fin de la barre de navigation */

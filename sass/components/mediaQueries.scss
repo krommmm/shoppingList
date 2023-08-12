@@ -1,0 +1,25 @@
+/* Début des media queries */
+@media screen and (max-width: 600px) {
+	.panierReduit_container {
+		position: absolute;
+		top: 80px;
+		right: 10px;
+	}
+	.main {
+		width: 78%;
+	}
+	.panier {
+		width: 100%;
+		margin: auto;
+	}
+	.panier_container {
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 972px) {
+	.paiement_container {
+		margin-top: 50px;
+	}
+}
+/* Fin du des medias queries */
